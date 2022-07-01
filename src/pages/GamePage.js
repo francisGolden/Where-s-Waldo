@@ -5,13 +5,15 @@ import ReactModal from "react-modal";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import db from "../firebase";
+import { onSnapshot, collection } from "firebase/firestore";
+
 
 
 
 
 const GamePage = () => {
-    const {waldo, setWaldo, setResult,
-        setTotalTime} = useContext(BoxContext);
+    const {waldo, setWaldo, setResult} = useContext(BoxContext);
 
     const [position, setPosition] = useState({x: null, y: null});
 
@@ -19,8 +21,17 @@ const GamePage = () => {
 
     const notify = (name) => toast(`You got ${name}!`);
 
+    const [coords, setCoords] = useState([])
 
-    console.log("render")
+    useEffect(()=>{
+        onSnapshot(collection(db, "coords"), (snapshot)=>{
+            setCoords(snapshot.docs.map(doc => doc.data()))
+        });
+        console.log(coords)
+    }, []);
+
+    
+    
 
     const handleClick = (e) => {
         // find coordinates of the mouse when it clicks
@@ -42,8 +53,9 @@ const GamePage = () => {
     // and the dropdown list selected value from e.target.value
     const handleForm = (e) => {
         
-        if (position.y < -143 && position.y > -195 && position.x > 685 && 
-            position.x < 733 && e.target.value === "blue"){
+        if (position.y < coords[0].first && position.y > coords[0].second 
+            && position.x > coords[0].third && 
+            position.x < coords[0].fourth && e.target.value === "blue"){
             console.log("blue beccato");
             notify("Tom Cat")
 
@@ -53,8 +65,9 @@ const GamePage = () => {
             e.target.value = ""
         }
 
-        if (position.y < -944 && position.y > -993 && position.x > 94 && 
-            position.x < 142 && e.target.value === "white"){
+        if (position.y < coords[2].first && position.y > coords[2].second 
+            && position.x > coords[2].third && 
+            position.x < coords[2].fourth && e.target.value === "white"){
             console.log("bianco beccato");
             notify("Brian Griffin")
             setWaldo(waldo.map((char)=>char.name === "white" ? {
@@ -63,8 +76,9 @@ const GamePage = () => {
             e.target.value = ""
         }
 
-        if (position.y < -1976 && position.y > -2020 && position.x > 558 && 
-            position.x < 601 && e.target.value === "green"){
+        if (position.y < coords[1].first && position.y > coords[1].second 
+            && position.x > coords[1].third && 
+            position.x < coords[1].fourth && e.target.value === "green"){
             console.log("green beccato");
             notify("C.C")
             setWaldo(()=>waldo.map((char)=>char.name === "green" ? {
@@ -88,7 +102,7 @@ const GamePage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [waldo])
 
-    
+    console.log("render")
     
     const handleModal = () => {
         setShowModal(false)
