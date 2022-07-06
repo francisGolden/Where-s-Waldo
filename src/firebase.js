@@ -6,9 +6,9 @@ import {getFirestore} from "firebase/firestore"
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDTcHssAlcOSbiCoogopi82uihELFkJKZQ",
-  authDomain: "waldo-d7262.firebaseapp.com",
-  databaseURL: "https://waldo-d7262-default-rtdb.europe-west1.firebasedatabase.app",
+  apiKey: "process.env.REACT_APP_apiKey",
+  authDomain: "process.env.REACT_APP_authDomain",
+  databaseURL: "process.env.REACT_APP_databaseURL",
   projectId: "waldo-d7262",
   storageBucket: "waldo-d7262.appspot.com",
   messagingSenderId: "268314534963",
